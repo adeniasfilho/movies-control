@@ -18,41 +18,36 @@ module.exports = app => {
 const express = require('express');
 const router = express.Router();
 const MoviesDB = require('../model/moviesDB');
+const exec = require('./utils');
 
-router.get('/', (req, res) => {
-    MoviesDB.getMovies((movies) => {
-        res.json(movies)
-    });
-});
-router.get('/:id(\\d+)', (req, res) => {
-    const id = req.params.id;
-    MoviesDB.getMoviesById(id, (movies) => {
+router.get('/', exec(async (req, res, next) => {
+    const movies = await MoviesDB.getMovies();
         res.json(movies);
-    });
-});
-router.delete('/:id(\\d+)', (req, res) => {
+}));
+router.get('/:id(\\d+)', exec(async(req, res, next) => {
     const id = req.params.id;
-    console.log("deletar movies " + id);
-    MoviesDB.deleteById(id, (affectedRows) => {
-        res.json({msg: "Filme/série deletado com sucesso."})
-    });
-});
-router.get('/:type', (req, res) => {
+    const movies = await MoviesDB.getMoviesById(id);
+        res.json(movies);
+    
+}));
+router.delete('/:id(\\d+)', exec(async(req, res, next) => {
+    const id = req.params.id;
+    const affectedRows = await MoviesDB.deleteById(id);
+        res.json({msg: affectedRows > 0 ? "Filme/série deletado com sucesso.": "Filmes/séries não excluído."});
+}));
+router.get('/:type', exec(async(req, res, next) => {
     const type = req.params.type;
-    MoviesDB.getMoviesByType(type, (movies) => {
+    const movies = await MoviesDB.getMoviesByType(type);
         res.json(movies);
-    });
-});
-router.post('/', (req, res) => {
-    const movies = req.body;
-    MoviesDB.save(movies, (movies) => {
+    
+}));
+router.post('/', exec(async(req, res, next) => {
+    const movies = await MoviesDB.save(req.body);
         res.json(movies);
-    });
-});
-router.put('/', (req, res) => {
-    const movies = req.body;
-    MoviesDB.update(movies,(movies) => {
+}));
+router.put('/', exec(async(req, res, next) => {
+    const movies = await MoviesDB.update(req.body);
         res.json({msg: "Filme/série atualizado com sucesso."})
-    });
-});
+}));
+
 module.exports = router;
