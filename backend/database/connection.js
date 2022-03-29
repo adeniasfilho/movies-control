@@ -1,10 +1,10 @@
-import { createConnection } from 'mysql';
-const connection = createConnection({
+
+const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: ' ',
+    password: 'cogndio ',
     database: 'movies-control'
 })
 connection.connect();
 
-export default connection;
+module.exports = connection;

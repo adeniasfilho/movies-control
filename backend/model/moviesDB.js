@@ -1,6 +1,8 @@
+import connection from '../database/connection';
+
 const mysql = require('mysql');
 
-//classe moviesDB
+//Classe moviesDB
 class MoviesDB {
     //Função para conectar no banco de dados
     static connect() {
@@ -8,7 +10,7 @@ class MoviesDB {
         const connection = mysql.createConnection({
             host : 'localhost',
             user : 'root',
-            password: ' ',
+            password: ' cogndio',
             database: 'movies-control'
         });
         //Conecta no banco de dados
